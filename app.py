@@ -9,6 +9,12 @@ rightMotorStatus = False
 PIN_RIGHT = 0
 PIN_LEFT = 0
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+GPIO.setup(PIN_LEFT, GPIO.OUT)
+GPIO.setup(PIN_RIGHT, GPIO.OUT)
+
+
 @app.route('/controller', methods=['GET'])
 def controller():
     return render_template("joy.html")
