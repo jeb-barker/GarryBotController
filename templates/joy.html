@@ -73,18 +73,9 @@ body
 	border: 1px solid #0000FF;
 }
 		</style>
-		<script src="joy.js"></script>
+		<script src="/static/joy.js"></script>
 	</head>
 	<body>
-		<!-- Example of FIXED or ABSOLUTE position -->
-		<div id="joy3Div" style="width:200px;height:200px;margin:50px;position:fixed;bottom:30px;left:500px;"></div>
-		<div style="position:fixed;bottom:125px;left:750px;">
-			Posizione X:<input id="joy3PosizioneX" type="text" /><br />
-			Posizione Y:<input id="joy3PosizioneY" type="text" /><br />
-			Direzione:<input id="joy3Direzione" type="text" /><br />
-			X :<input id="joy3X" type="text" /></br>
-			Y :<input id="joy3Y" type="text" />
-		</div>
 		<!-- Example of two JoyStick integrated in the page structure -->
 		<div class="row">
 			<div class="columnLateral">
@@ -95,25 +86,20 @@ body
 				X :<input id="joy1X" type="text" /></br>
 				Y :<input id="joy1Y" type="text" />
 			</div>
+			<div id="throttleDiv">
+
+			</div>
 			<div class="columnCetral">
-				<h2>JoyStick</h2>
+				<h2>GarryBot Controller</h2>
 				<p>
-A simple JoyStick that use HTML5, Canvas and JavaScript, for touch and mouse interfaces (no JQuery required).<br /><br />
-The project is available at <a href="https://github.com/bobboteck/JoyStick">https://github.com/bobboteck/JoyStick</a>.<br /><br />
-The left JoyStick (in red square) is an example that use default parametrs, the right JoyStick (in blue square) instead use same custom parameters, specifically the title and the autoReturnToCenter disabled, this also uses CSS class instead inline style.<br /><br />
-<b>NOTE:</b> currently the JoyStick does not work correctly if inserted in a Table tag, to put more than one JoyStick on a single line it is recommended to create a structure with the Div, as in this example page.
+ 					Here is the controller for GarryBot. The Joystick on the left controls movement. The Button on the right will arm the blades. The blade throttle can only be raised above zero when the blades are armed.
 				</p>
 			</div>
-			<div class="columnLateral">
-				<div id="joy2Div"></div>
-				Posizione X:<input id="joy2PosizioneX" type="text" /></br>
-				Posizione Y:<input id="joy2PosizioneY" type="text" /></br>
-				Direzione:<input id="joy2Direzione" type="text" /></br>
-				X :<input id="joy2X" type="text" /></br>
-				Y :<input id="joy2Y" type="text" />
-			</div>
+
 		</div>
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 		<script type="text/javascript">
+
 // Create JoyStick object into the DIV 'joy1Div'
 //var Joy1 = new JoyStick('joy1Div');
 
@@ -136,38 +122,75 @@ var Joy1 = new JoyStick('joy1Div', {}, function(stickData) {
     joy1Direzione.value = stickData.cardinalDirection;
     joy1X.value = stickData.x;
     joy1Y.value = stickData.y;
+
+	//Use stick cardinal direction to call movement functions in the flask app.
+	if(stickData.cardinalDirection === "N") {
+		//forward
+		$.ajax({
+            url: "/forward",
+            type: "post",
+            success: function(response) {
+                console.log(response);
+            }
+        });
+	}
+	else if(stickData.cardinalDirection === "NW") {
+		//forward left
+	}
+	else if(stickData.cardinalDirection === "NE") {
+		//forward right
+	}
+	else if(stickData.cardinalDirection === "W") {
+		//left
+		$.ajax({
+            url: "/turnLeft",
+            type: "post",
+            success: function(response) {
+                console.log(response);
+            }
+        });
+	}
+	else if(stickData.cardinalDirection === "E") {
+		//right
+		$.ajax({
+            url: "/turnRight",
+            type: "post",
+            success: function(response) {
+                console.log(response);
+            }
+        });
+	}
+	else if(stickData.cardinalDirection === "C") {
+		//center
+		$.ajax({
+            url: "/zero",
+            type: "post",
+            success: function(response) {
+                console.log(response);
+            }
+        });
+	}
 });
 
-// Create JoyStick object into the DIV 'joy2Div'
-var joy2Param = { "title": "joystick2", "autoReturnToCenter": false };
-var Joy2 = new JoyStick('joy2Div', joy2Param);
+var Throttle = new JoyStick('throttleDiv', { "title": "throttle", "autoReturnToCenter": false }, function(stickData) {
+	$.ajax({
+            url: "/change_throttle",
+            type: "post",
+			data: [((stickData.yPosition+100)*500)],
+            success: function(response) {
+                console.log(response);
+            }
+        });
+});
 
-var joy2IinputPosX = document.getElementById("joy2PosizioneX");
-var joy2InputPosY = document.getElementById("joy2PosizioneY");
-var joy2Direzione = document.getElementById("joy2Direzione");
-var joy2X = document.getElementById("joy2X");
-var joy2Y = document.getElementById("joy2Y");
+// setInterval(function(){ joy2IinputPosX.value=Joy2.GetPosX(); }, 50);
+// setInterval(function(){ joy2InputPosY.value=Joy2.GetPosY(); }, 50);
+// setInterval(function(){ joy2Direzione.value=Joy2.GetDir(); }, 50);
+// setInterval(function(){ joy2X.value=Joy2.GetX(); }, 50);
+// setInterval(function(){ joy2Y.value=Joy2.GetY(); }, 50);
 
-setInterval(function(){ joy2IinputPosX.value=Joy2.GetPosX(); }, 50);
-setInterval(function(){ joy2InputPosY.value=Joy2.GetPosY(); }, 50);
-setInterval(function(){ joy2Direzione.value=Joy2.GetDir(); }, 50);
-setInterval(function(){ joy2X.value=Joy2.GetX(); }, 50);
-setInterval(function(){ joy2Y.value=Joy2.GetY(); }, 50);
 
-var joy3Param = { "title": "joystick3" };
-var Joy3 = new JoyStick('joy3Div', joy3Param);
-
-var joy3IinputPosX = document.getElementById("joy3PosizioneX");
-var joy3InputPosY = document.getElementById("joy3PosizioneY");
-var joy3Direzione = document.getElementById("joy3Direzione");
-var joy3X = document.getElementById("joy3X");
-var joy3Y = document.getElementById("joy3Y");
-
-setInterval(function(){ joy3IinputPosX.value=Joy3.GetPosX(); }, 50);
-setInterval(function(){ joy3InputPosY.value=Joy3.GetPosY(); }, 50);
-setInterval(function(){ joy3Direzione.value=Joy3.GetDir(); }, 50);
-setInterval(function(){ joy3X.value=Joy3.GetX(); }, 50);
-setInterval(function(){ joy3Y.value=Joy3.GetY(); }, 50);
 		</script>
+
 	</body>
 </html>
