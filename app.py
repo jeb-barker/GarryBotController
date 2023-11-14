@@ -2,6 +2,7 @@ import time
 
 from flask import *
 import pigpio
+import RPi.GPIO as GPIO
 # import RPi.GPIO as GPIO
 
 app = Flask(__name__)
