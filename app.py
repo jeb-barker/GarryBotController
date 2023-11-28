@@ -105,6 +105,7 @@ def forward():
         leftMotorStatus = True
     return "Forward"
 
+
 @app.route('/arm_blades', methods=['POST'])
 def arm():
     global armed

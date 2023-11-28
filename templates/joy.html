@@ -86,8 +86,13 @@ body
 				X :<input id="joy1X" type="text" /></br>
 				Y :<input id="joy1Y" type="text" />
 			</div>
-			<div id="throttleDiv">
+			<div id="throttleDiv" style="width:200px;height:200px;margin:50px">
 
+			</div>
+			<div id="arm">
+				<button id="arm-button">
+
+				</button>
 			</div>
 			<div class="columnCetral">
 				<h2>GarryBot Controller</h2>
@@ -182,6 +187,18 @@ var Throttle = new JoyStick('throttleDiv', { "title": "throttle", "autoReturnToC
             }
         });
 });
+
+var ArmButton = document.getElementById("arm-button");
+ArmButton.onclick = function(){
+	$.ajax({
+            url: "/arm_blades",
+            type: "post",
+            success: function(response) {
+                console.log(response);
+            }
+        });
+};
+
 
 // setInterval(function(){ joy2IinputPosX.value=Joy2.GetPosX(); }, 50);
 // setInterval(function(){ joy2InputPosY.value=Joy2.GetPosY(); }, 50);
