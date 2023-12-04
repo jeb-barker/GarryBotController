@@ -178,25 +178,22 @@ var Joy1 = new JoyStick('joy1Div', {}, function(stickData) {
 });
 
 var Throttle = new JoyStick('throttleDiv', { "title": "throttle", "autoReturnToCenter": false }, function(stickData) {
-	$.ajax({
-            url: "/change_throttle",
-            type: "post",
-			data: [((stickData.yPosition+100)*500)],
-            success: function(response) {
+	$.post("/change_throttle",
+			{level: ((stickData.yPosition+100)*500)},
+            function(response) {
                 console.log(response);
             }
-        });
+        );
 });
 
 var ArmButton = document.getElementById("arm-button");
 ArmButton.onclick = function(){
-	$.ajax({
-            url: "/arm_blades",
-            type: "post",
-            success: function(response) {
+	$.post("/arm_blades",
+			{},
+            function(response) {
                 console.log(response);
             }
-        });
+        );
 };
 
 

@@ -124,8 +124,9 @@ def arm():
 def throttle():
     global armed
     data = request.form
+    print(data)
     if armed:
-        throttleLevel = data[0]
+        throttleLevel = data.level
         pi.set_servo_pulsewidth(PIN_BLADES, throttleLevel)
 
 
